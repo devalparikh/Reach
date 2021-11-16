@@ -1,8 +1,10 @@
 import logging
 import json
 
+from data.preprocess import create_dataframe, preprocess_dataframe
 
-class Reach:
+
+class ReachModel:
     """
     A class used to represent an models
 
@@ -19,33 +21,46 @@ class Reach:
 
     Methods
     -------
-    logModelDescription()
+    log_model_description()
         Logs the model structure
     """
 
-    def __init__(self, preproccessor, model, evaluation):
+    def __init__(self, raw_data_path, preproccessor, model, evaluation):
+        self.df = create_dataframe(raw_data_path)
         self.preproccessor = preproccessor
         self.model = model
         self.evaluation = evaluation
 
-    def logModelDescription(self):
+    def preprocess(self):
+        preprocess_dataframe(
+            self.df,
+            self.preproccessor['test_size'],
+            self.preproccessor['selected_features'],
+            self.preproccessor['class_column'],
+        )
+
+    def log_model_description(self):
+        logging.info(vars(self))
+
         model_data = json.dumps(
             vars(self),
             indent=4,
             # sort_keys=True
         )
-        logging.info(vars(self))
         print(model_data)
 
 
 if __name__ == '__main__':
+
+    raw_data_path = './src/data/music_genre_data.csv'
+
     preprocess_config = {
-        'train': 80,
-        'test': 20,
+        'test_size': 25,
         'cross_validation': {
             'k_folds': 4,
         },
-        'selected_Features': ['Age', 'Price', 'Size']
+        'selected_features': ['artist_name', 'key', 'instrumentalness'],
+        'class_column': ['music_genre']
     }
 
     model_config = {
@@ -57,5 +72,11 @@ if __name__ == '__main__':
         'metric': ['accuracy', 'f1']
     }
 
-    model1 = Reach(preprocess_config, model_config, evaluation_config)
-    model1.logModelDescription()
+    reach_model = ReachModel(
+        raw_data_path,
+        preprocess_config,
+        model_config,
+        evaluation_config
+    )
+
+    reach_model.preprocess()
