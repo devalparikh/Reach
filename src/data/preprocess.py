@@ -31,7 +31,8 @@ def preprocess_dataframe(df, test_size, features, class_column):
 
     print('\t3. Test train split')
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
+        X,
+        y,
         stratify=y,
         test_size=test_size
     )
