@@ -1,1 +1,5 @@
 .env
+src/data/__pycache__/
+src/features/__pycache__/
+src/models/__pycache__/
+src/data/__pycache__/preprocess.cpython-38.pyc
