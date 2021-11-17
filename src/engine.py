@@ -1,7 +1,8 @@
 import logging
 import json
 
-from data.preprocess import create_dataframe, preprocess_dataframe
+from data.preprocess import create_dataframe
+from features.preprocess import preprocess_dataframe
 
 
 class ReachModel:
@@ -80,3 +81,5 @@ if __name__ == '__main__':
     )
 
     reach_model.preprocess()
+    # reach_model.train()
+    # reach_model.evaluate()
