@@ -1,7 +1,7 @@
 import logging
 import json
 
-from data.preprocess import create_dataframe
+from data.data_import import create_dataframe
 from features.preprocess import preprocess_dataframe
 
 
