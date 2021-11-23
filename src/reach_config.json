@@ -1,0 +1,20 @@
+{
+    "test_size": 25,
+    "cross_validation": {
+        "k_folds": 4
+    },
+    "selected_features": [
+        "artist_name",
+        "key",
+        "instrumentalness"
+    ],
+    "class_column": [
+        "music_genre"
+    ],
+    "algorithm": "multi_layer_perceptron",
+    "epochs": 24,
+    "metric": [
+        "accuracy",
+        "f1"
+    ]
+}

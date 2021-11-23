@@ -41,7 +41,4 @@ def preprocess_dataframe(df, test_size, features, class_column):
     print('\t3. Test train split')
     X_train, X_test, y_train, y_test = _tts(X, y, test_size)
 
-    print('\nX_train:\n' + X_train[:10].to_string())
-    print('\ny_Train:\n' + y_train[:10].to_string())
-
     return X_train, X_test, y_train, y_test

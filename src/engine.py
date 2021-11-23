@@ -3,6 +3,7 @@ import json
 
 from data.data_import import create_dataframe
 from features.preprocess import preprocess_dataframe
+from models.train import train
 
 
 class ReachModel:
@@ -13,17 +14,10 @@ class ReachModel:
 
     Attributes
     ----------
-    preproccessor : dict
-        preproccessor
-    model : dict
-        model
-    evaluation : dict
-        evaluation
 
     Methods
     -------
-    log_model_description()
-        Logs the model structure
+
     """
 
     def __init__(self, raw_data_path, preproccessor, model, evaluation):
@@ -32,22 +26,38 @@ class ReachModel:
         self.model = model
         self.evaluation = evaluation
 
+        self.X_train = None
+        self.X_test = None
+        self.y_train = None
+        self.y_test = None
+
     def preprocess(self):
-        preprocess_dataframe(
+        X_train, X_test, y_train, y_test = preprocess_dataframe(
             self.df,
             self.preproccessor['test_size'],
             self.preproccessor['selected_features'],
             self.preproccessor['class_column'],
         )
 
-    def log_model_description(self):
-        logging.info(vars(self))
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
 
+    def train(self):
+        model = train(self.model, self.X_train, self.y_train)
+        print()
+
+    def log_model_config(self):
         model_data = json.dumps(
-            vars(self),
+            {**self.preproccessor,
+             **self.model,
+             **self.evaluation},
             indent=4,
             # sort_keys=True
         )
+
+        logging.info(model_data)
         print(model_data)
 
 
@@ -65,8 +75,11 @@ if __name__ == '__main__':
     }
 
     model_config = {
-        'algorithm': 'multi_layer_perceptron',
-        'epochs': 24,
+        # 'algorithm': 'multi_layer_perceptron',
+        # 'epochs': 24,
+        'algorithm': 'knn',
+        'k': 3
+
     }
 
     evaluation_config = {
@@ -80,6 +93,9 @@ if __name__ == '__main__':
         evaluation_config
     )
 
+    reach_model.log_model_config()
     reach_model.preprocess()
-    # reach_model.train()
+    print('\nX_train:\n' + reach_model.X_train[:10].to_string())
+    print('\ny_Train:\n' + reach_model.y_train[:10].to_string())
+    reach_model.train()
     # reach_model.evaluate()
